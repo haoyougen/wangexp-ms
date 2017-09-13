@@ -1,0 +1,47 @@
+一个spring cloud的 学习程序
+利用了spring cloud的最新版本 Finchley.M2
+实现内容  服务的注册 发现 调用 负载均衡  网关
+基于springboot的服务生产者
+基于Eureka的服务注册，发现，负载均衡(没有用ribbon）.
+领用Feign做服务的消费端 
+基于Hytrix的服务熔断
+基于zuul的网关
+
+工程涉及的地址
+
+Eureka注册    
+localhost:9999/eureka/apps
+
+服务消费者:通过feign调用，feign实现了负载均衡  @EnableFeignClients
+http://localhost:8888/api/p1
+http://localhost:8888/api/p2
+
+
+服务生产者
+生产者1
+http://localhost:7771/api/p1
+http://localhost:7772/api/p1
+
+生产者2
+http://localhost:7773/api/p2
+http://localhost:7774/api/p2
+http://localhost:7773/api/p2/hc  对于httpclient的调用
+http://localhost:7774/api/p2/hc
+
+生产者3
+http://localhost:7775/api/p3
+http://localhost:7776/api/p3
+
+网关
+zuul，:http://localhost:5555
+<br>启动后，会将自己注册到Eureka，并自动发现已有的服务provider1 provider2
+通过网关调用应用地址
+http://localhost:5555/provider1/api/p1
+http://localhost:5555/provider2/api/p2
+会自动调用服务生产者，并且进行负载均衡
+
+监控 
+zipkin server: http://127.0.0.1:9808
+zipkin server 存储监控结果到mysql => 初始化脚本 https://github.com/openzipkin/zipkin/blob/master/zipkin-storage/mysql/src/main/resources/mysql.sql
+
+
